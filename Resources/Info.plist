@@ -16,9 +16,10 @@
 	<string>APPL</string>
 	<key>CFBundleExecutable</key>
 	<string>ClipboardOverlay</string>
+	<!-- CFBundleIconFile points at Resources/AppIcon.icns. Deliberately no
+	     CFBundleIconName: that key names an asset-catalog entry, and pointing it
+	     at one that doesn't exist makes macOS fall back to the generic icon. -->
 	<key>CFBundleIconFile</key>
-	<string>AppIcon</string>
-	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.0</string>
