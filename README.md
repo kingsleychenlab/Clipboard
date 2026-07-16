@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/icon.png" width="128" alt="Clipboard Overlay">
+<img src="docs/icon.png" width="128" alt="Clipboard">
 
-# Clipboard Overlay
+# Clipboard
 
 **A Spotlight-style clipboard history for macOS.**
 
@@ -15,8 +15,8 @@ Press `Cmd+Shift+V` anywhere · type to filter · hit Enter · it pastes itself.
 Requires macOS 13+. No Xcode needed — Command Line Tools are enough.
 
 ```sh
-git clone https://github.com/USERNAME/clipboard-overlay.git
-cd clipboard-overlay
+git clone https://github.com/USERNAME/clipboard.git
+cd clipboard
 ./install.sh
 ```
 
@@ -30,7 +30,7 @@ you. Approve it under **System Settings → Privacy & Security → Accessibility
 Without it everything still works; you just press `Cmd+V` yourself.
 
 **Start it at login.** **System Settings → General → Login Items → `+` →
-ClipboardOverlay**
+Clipboard**
 
 ## Use
 

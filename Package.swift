@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "ClipboardOverlay",
+    name: "Clipboard",
     platforms: [.macOS(.v13)],
     targets: [
         .executableTarget(
-            name: "ClipboardOverlay",
-            path: "Sources/ClipboardOverlay"
+            name: "Clipboard",
+            path: "Sources/Clipboard"
         )
     ]
 )

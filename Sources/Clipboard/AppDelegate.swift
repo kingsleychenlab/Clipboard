@@ -3,10 +3,10 @@ import Carbon.HIToolbox
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    // CLIPBOARD_OVERLAY_STORE lets tests use a throwaway history file instead of
+    // CLIPBOARD_STORE lets tests use a throwaway history file instead of
     // scribbling on the real one.
     private let history = ClipboardHistory(
-        storeURL: ProcessInfo.processInfo.environment["CLIPBOARD_OVERLAY_STORE"].map(URL.init(fileURLWithPath:))
+        storeURL: ProcessInfo.processInfo.environment["CLIPBOARD_STORE"].map(URL.init(fileURLWithPath:))
     )
     private let watcher = ClipboardWatcher()
     private lazy var overlay = OverlayController(history: history)
@@ -75,21 +75,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             source.resume()
             signalSources.append(source)
 
-            if ProcessInfo.processInfo.environment["CLIPBOARD_OVERLAY_SELFTEST"] == "1" {
+            if ProcessInfo.processInfo.environment["CLIPBOARD_SELFTEST"] == "1" {
                 DebugSelfTest.run(overlay: overlay, history: history, watcher: watcher)
             }
         }
     #endif
 }
 
-/// Prints to stdout, and also appends to $CLIPBOARD_OVERLAY_LOG when set — the
+/// Prints to stdout, and also appends to $CLIPBOARD_LOG when set — the
 /// app is normally launched by LaunchServices, where stdout goes nowhere.
 func log(_ message: String) {
     let stamp = DateFormatter.localizedString(from: Date(), dateStyle: .none, timeStyle: .medium)
     let line = "[\(stamp)] \(message)"
     print(line)
 
-    guard let path = ProcessInfo.processInfo.environment["CLIPBOARD_OVERLAY_LOG"] else { return }
+    guard let path = ProcessInfo.processInfo.environment["CLIPBOARD_LOG"] else { return }
     guard let data = (line + "\n").data(using: .utf8) else { return }
     if let handle = FileHandle(forWritingAtPath: path) {
         handle.seekToEndOfFile()

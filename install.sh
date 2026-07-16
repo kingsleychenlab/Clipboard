@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Builds Clipboard Overlay from source and installs it to /Applications.
+# Builds Clipboard from source and installs it to /Applications.
 #
 #   ./install.sh
 #
@@ -9,10 +9,10 @@
 set -e
 
 cd "$(dirname "$0")"
-APP_NAME="ClipboardOverlay.app"
+APP_NAME="Clipboard.app"
 DEST="/Applications/$APP_NAME"
 
-echo "Clipboard Overlay — install"
+echo "Clipboard — install"
 echo
 
 # --- checks -----------------------------------------------------------------
@@ -38,9 +38,11 @@ echo
 
 # --- install ----------------------------------------------------------------
 
-if pgrep -q ClipboardOverlay; then
+# -x: exact process name. Unanchored, "Clipboard" would match any process with
+# it somewhere in the name and take innocent bystanders down with it.
+if pgrep -qx Clipboard; then
   echo "==> stopping the running copy"
-  pkill ClipboardOverlay || true
+  pkill -x Clipboard || true
   sleep 1
 fi
 
@@ -64,10 +66,10 @@ One more step for auto-paste:
   Without it everything still works; you just press Cmd+V yourself.
 
 To start it automatically at login:
-  System Settings → General → Login Items → + → ClipboardOverlay
+  System Settings → General → Login Items → + → Clipboard
 
-To uninstall:
-  pkill ClipboardOverlay
-  rm -rf /Applications/ClipboardOverlay.app
-  rm -rf ~/Library/Application\ Support/ClipboardOverlay
+To uninstall (the second command also wipes your saved clip history):
+  pkill -x Clipboard
+  rm -rf /Applications/Clipboard.app
+  rm -rf ~/Library/Application\ Support/Clipboard
 EOF

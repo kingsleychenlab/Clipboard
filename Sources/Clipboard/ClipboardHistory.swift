@@ -16,14 +16,14 @@ final class ClipboardHistory: ObservableObject {
 
     private let storeURL: URL
     private var pendingSave: DispatchWorkItem?
-    private let saveQueue = DispatchQueue(label: "clipboardoverlay.save", qos: .utility)
+    private let saveQueue = DispatchQueue(label: "clipboard.save", qos: .utility)
 
     static var defaultStoreURL: URL {
         let base = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask)
             .first ?? URL(fileURLWithPath: NSHomeDirectory())
         return base
-            .appendingPathComponent("ClipboardOverlay", isDirectory: true)
+            .appendingPathComponent("Clipboard", isDirectory: true)
             .appendingPathComponent("history.json")
     }
 

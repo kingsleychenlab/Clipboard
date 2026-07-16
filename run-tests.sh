@@ -4,7 +4,7 @@
 set -e
 cd "$(dirname "$0")"
 
-STORE="$(mktemp -t clipboardoverlay-test).json"
+STORE="$(mktemp -t clipboard-test).json"
 trap 'rm -f "$STORE"' EXIT
 
 echo "==> building (debug — the self-test is compiled out of release builds)"
@@ -12,6 +12,6 @@ swift build 2>&1 | grep -vE "XCTest|PlatformPath|^\s*$" | grep -E "error|warning
 
 echo "==> running self-test"
 rm -f "$STORE"
-CLIPBOARD_OVERLAY_STORE="$STORE" \
-CLIPBOARD_OVERLAY_SELFTEST=1 \
-  .build/debug/ClipboardOverlay 2>&1 | grep -E "PASS|FAIL|SELF TEST|accessibility"
+CLIPBOARD_STORE="$STORE" \
+CLIPBOARD_SELFTEST=1 \
+  .build/debug/Clipboard 2>&1 | grep -E "PASS|FAIL|SELF TEST|accessibility"

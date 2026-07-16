@@ -5,8 +5,8 @@ import Carbon.HIToolbox
 
 /// Drives the overlay with real in-process key events so keyboard behaviour can
 /// be verified without granting Accessibility to a test driver.
-/// Debug builds only, and only when CLIPBOARD_OVERLAY_SELFTEST=1:
-///     swift build && CLIPBOARD_OVERLAY_SELFTEST=1 .build/debug/ClipboardOverlay
+/// Debug builds only, and only when CLIPBOARD_SELFTEST=1:
+///     swift build && CLIPBOARD_SELFTEST=1 .build/debug/Clipboard
 enum DebugSelfTest {
     private static var failures = 0
     private static var selected: [String] = []
@@ -37,7 +37,7 @@ enum DebugSelfTest {
         var steps: [(String, () -> Void)] = []
 
         steps.append(("show overlay", {
-            check("history starts clean (use a fresh CLIPBOARD_OVERLAY_STORE)",
+            check("history starts clean (use a fresh CLIPBOARD_STORE)",
                   history.items.count == 3, "\(history.items.count) — stale store?")
             overlay.show()
         }))

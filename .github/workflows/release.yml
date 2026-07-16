@@ -19,12 +19,12 @@ jobs:
       - name: Zip the app
         # ditto, not zip: it preserves the bundle's symlinks and metadata, so the
         # code signature survives the round trip.
-        run: ditto -c -k --keepParent build/ClipboardOverlay.app ClipboardOverlay.zip
+        run: ditto -c -k --keepParent build/Clipboard.app Clipboard.zip
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: ClipboardOverlay.zip
+          files: Clipboard.zip
           body: |
             ## Install
 
@@ -40,9 +40,9 @@ jobs:
             …or use this zip and clear the quarantine flag yourself:
 
             ```sh
-            unzip ClipboardOverlay.zip -d /Applications/
-            xattr -dr com.apple.quarantine /Applications/ClipboardOverlay.app
-            open /Applications/ClipboardOverlay.app
+            unzip Clipboard.zip -d /Applications/
+            xattr -dr com.apple.quarantine /Applications/Clipboard.app
+            open /Applications/Clipboard.app
             ```
 
             Then press **Cmd+Shift+V** from any app.

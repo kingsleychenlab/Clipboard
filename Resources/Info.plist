@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>ClipboardOverlay</string>
+	<string>Clipboard</string>
 	<key>CFBundleDisplayName</key>
-	<string>Clipboard Overlay</string>
+	<string>Clipboard</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.kingsley.clipboardoverlay</string>
+	<string>com.kingsley.clipboard</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleShortVersionString</key>
@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleExecutable</key>
-	<string>ClipboardOverlay</string>
+	<string>Clipboard</string>
 	<!-- CFBundleIconFile points at Resources/AppIcon.icns. Deliberately no
 	     CFBundleIconName: that key names an asset-catalog entry, and pointing it
 	     at one that doesn't exist makes macOS fall back to the generic icon. -->
