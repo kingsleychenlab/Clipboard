@@ -45,6 +45,18 @@ final class ClipboardHistory: ObservableObject {
         scheduleSave()
     }
 
+    /// Forgets a clip. Any quit path flushes, so the deletion is durable even if
+    /// the app dies before the throttled save fires.
+    ///
+    /// This only forgets our copy — the system clipboard is left alone. Clearing
+    /// it would be a surprise: deleting yesterday's clip shouldn't wipe what
+    /// you're holding right now.
+    func remove(_ item: ClipItem) {
+        guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
+        items.remove(at: index)
+        scheduleSave()
+    }
+
     // MARK: - Persistence
 
     private func load() {

@@ -44,9 +44,14 @@ were doing.
 | *type* | Filter clips (fuzzy — `hw` matches `hello world`) |
 | `↑` `↓` | Move selection |
 | `Enter` | Paste the selected clip into the app you came from |
+| `Cmd+Delete` | Delete the selected clip for good |
 | `Esc` | Dismiss |
 
-Clicking outside dismisses it too. The mouse is never required.
+Clicking outside dismisses it too. The mouse is never required — though hovering
+a row reveals a trash button if you'd rather click.
+
+Deleting only forgets the app's copy; whatever is on your system clipboard right
+now stays there.
 
 It keeps your last 100 clips — text and images — and remembers them across
 restarts. Clips your password manager marks as concealed are never recorded.

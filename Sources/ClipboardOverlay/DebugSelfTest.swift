@@ -119,6 +119,64 @@ enum DebugSelfTest {
                   types.contains(NSPasteboard.PasteboardType.tiff.rawValue))
         }))
 
+        // --- deletion -------------------------------------------------------
+
+        steps.append(("re-show for delete tests", {
+            overlay.show()
+            check("3 clips before deleting", overlay.debugModel.results.count == 3, "\(overlay.debugModel.results.count)")
+        }))
+
+        steps.append(("plain Delete (no Cmd) while typing", {
+            typeCharacter("a", overlay: overlay)
+            sendKey(kVK_Delete, overlay: overlay)
+        }))
+        steps.append(("plain Delete edits the query, never deletes a clip", {
+            check("no clip was deleted", overlay.debugModel.results.count == 3, "\(overlay.debugModel.results.count)")
+            check("query was edited instead", overlay.debugModel.query == "", "query='\(overlay.debugModel.query)'")
+        }))
+
+        steps.append(("select middle row, Cmd+Delete", {
+            sendKey(kVK_DownArrow, overlay: overlay)  // index 1 = "beta two"
+            sendKey(kVK_Delete, flags: .command, overlay: overlay)
+        }))
+        steps.append(("Cmd+Delete removes the selected clip", {
+            check("2 clips remain", overlay.debugModel.results.count == 2, "\(overlay.debugModel.results.count)")
+            check("the right one went", !overlay.debugModel.results.contains { $0.preview == "beta two" },
+                  overlay.debugModel.results.map(\.preview).joined(separator: ", "))
+            // The whole point of not resetting selection on item changes: the
+            // next row slides under the cursor so you can delete a run of clips.
+            check("selection stays in place", overlay.debugModel.selectedIndex == 1, "\(overlay.debugModel.selectedIndex)")
+            check("selection now points at the next clip", overlay.debugModel.selectedItem?.preview == "alpha one",
+                  overlay.debugModel.selectedItem?.preview ?? "nil")
+        }))
+
+        steps.append(("Cmd+Delete again (repeat delete)", {
+            sendKey(kVK_Delete, flags: .command, overlay: overlay)
+        }))
+        steps.append(("repeat delete clamps at the end", {
+            check("1 clip remains", overlay.debugModel.results.count == 1, "\(overlay.debugModel.results.count)")
+            check("selection clamped to last row", overlay.debugModel.selectedIndex == 0, "\(overlay.debugModel.selectedIndex)")
+            check("survivor is gamma three", overlay.debugModel.selectedItem?.preview == "gamma three",
+                  overlay.debugModel.selectedItem?.preview ?? "nil")
+        }))
+
+        steps.append(("delete the last one", {
+            sendKey(kVK_Delete, flags: .command, overlay: overlay)
+        }))
+        steps.append(("empty list is handled", {
+            check("history empty", overlay.debugModel.results.isEmpty, "\(overlay.debugModel.results.count)")
+            check("no selected item", overlay.debugModel.selectedItem == nil)
+            sendKey(kVK_Delete, flags: .command, overlay: overlay)  // must not crash
+            check("Cmd+Delete on empty list is a no-op", overlay.debugModel.results.isEmpty)
+            sendKey(kVK_Return, overlay: overlay)  // must not crash or select
+            check("Enter on empty list selects nothing", selected.count == 1, "\(selected.count)")
+        }))
+
+        steps.append(("deletion persisted to the store", {
+            history.flush()
+            check("store reflects the deletions", history.items.isEmpty, "\(history.items.count) left")
+        }))
+
         steps.append(("re-show, then Escape", {
             overlay.show()
             check("query reset on re-show", overlay.debugModel.query == "")
@@ -157,12 +215,17 @@ enum DebugSelfTest {
         if !condition { failures += 1 }
     }
 
-    private static func sendKey(_ keyCode: Int, characters: String = "", overlay: OverlayController) {
+    private static func sendKey(
+        _ keyCode: Int,
+        characters: String = "",
+        flags: NSEvent.ModifierFlags = [],
+        overlay: OverlayController
+    ) {
         guard let window = overlay.debugPanel,
               let event = NSEvent.keyEvent(
                 with: .keyDown,
                 location: .zero,
-                modifierFlags: [],
+                modifierFlags: flags,
                 timestamp: ProcessInfo.processInfo.systemUptime,
                 windowNumber: window.windowNumber,
                 context: nil,

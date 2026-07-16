@@ -150,7 +150,16 @@ final class OverlayController {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self, self.isVisible else { return event }
 
+            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+
             switch Int(event.keyCode) {
+            // Cmd+Delete, the Finder idiom. Plain Delete must fall through to the
+            // query field, or you couldn't correct a typo without destroying a
+            // clip. (Note `case a, b where c` would bind the `where` to `b` only.)
+            case kVK_Delete, kVK_ForwardDelete:
+                guard flags.contains(.command) else { return event }
+                self.model.deleteSelected()
+                return nil
             case kVK_Escape:
                 self.hide(restoringFocus: true)
                 return nil
