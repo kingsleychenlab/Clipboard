@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: ./build.sh release
+
+      - name: Zip the app
+        # ditto, not zip: it preserves the bundle's symlinks and metadata, so the
+        # code signature survives the round trip.
+        run: ditto -c -k --keepParent build/ClipboardOverlay.app ClipboardOverlay.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ClipboardOverlay.zip
+          body: |
+            ## Install
+
+            The app is ad-hoc signed, not notarized, so macOS quarantines this
+            download. Either build from source (no quarantine, recommended):
+
+            ```sh
+            git clone https://github.com/${{ github.repository }}.git
+            cd $(basename ${{ github.repository }})
+            ./install.sh
+            ```
+
+            …or use this zip and clear the quarantine flag yourself:
+
+            ```sh
+            unzip ClipboardOverlay.zip -d /Applications/
+            xattr -dr com.apple.quarantine /Applications/ClipboardOverlay.app
+            open /Applications/ClipboardOverlay.app
+            ```
+
+            Then press **Cmd+Shift+V** from any app.
